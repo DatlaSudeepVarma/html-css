@@ -60,6 +60,12 @@ export interface WeddingData {
     title: Localized;
     subtitle: Localized;
   };
+  scratch: {
+    title: Localized;
+    subtitle: Localized;
+    hint: Localized;
+    tap: Localized;
+  };
   couple: {
     title: Localized;
     /** "❤" is rendered as an animated heart. */
@@ -162,7 +168,8 @@ export const wedding: WeddingData = {
     label: { te: "కళ్యాణ వేదిక", en: "Kalyana Vedika" },
     name: { te: "ఆహ్వాన్ కన్వెన్షన్", en: "Ahvan Convention" },
     addressLines: [
-      { te: "పైపులరోడ్ జంక్షన్, ఎస్.బి.ఐ ఎదురుగా", en: "Pipula Road Junction, opposite SBI" },
+      { te: "పైపులరోడ్ జంక్షన్", en: "Pipula Road Junction" },
+      { te: "ఎస్.బి.ఐ ఎదురుగా", en: "Opposite SBI" },
       { te: "సింగనగర్, విజయవాడ", en: "Singh Nagar, Vijayawada" },
     ],
     mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(VENUE_QUERY)}`,
@@ -172,8 +179,8 @@ export const wedding: WeddingData = {
   invitedBy: {
     label: { te: "ఆహ్వానించువారు", en: "Invited By" },
     names: {
-      te: "శ్రీ\u00A0దాట్ల శ్రీనివాసరాజు & శ్రీమతి\u00A0పద్మావతి కుటుంబ సభ్యులు",
-      en: "Sri\u00A0Datla Srinivasa Raju & Smt.\u00A0Padmavathi and Family",
+      te: "శ్రీ\u00A0దాట్ల శ్రీనివాసరాజు & శ్రీమతి\u00A0పద్మావతి",
+      en: "Sri\u00A0Datla Srinivasa Raju & Smt.\u00A0Padmavathi",
     },
     closingBlessing: {
       te: "మీ రాకయే మాకు ఆనందం — మీ ఆశీస్సులే నూతన వధూవరులకు శ్రీరామరక్ష",
@@ -187,6 +194,16 @@ export const wedding: WeddingData = {
       te: "మా ఇంట జరిగే శుభకార్యానికి మీకు ఇదే మా ఆత్మీయ ఆహ్వానం",
       en: "Our heartfelt invitation to an auspicious celebration in our family",
     },
+  },
+
+  scratch: {
+    title: { te: "గీసి చూడండి", en: "Scratch to reveal" },
+    subtitle: {
+      te: "బంగారు పొరను గీసి వధూవరులను చూడండి",
+      en: "Brush away the gold leaf to reveal the couple",
+    },
+    hint: { te: "వేలితో గీయండి", en: "Scratch with your finger" },
+    tap: { te: "తెరవడానికి నొక్కండి", en: "Tap to reveal" },
   },
 
   couple: {
