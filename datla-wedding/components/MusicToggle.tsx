@@ -1,15 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { LotusIcon } from "@/components/ornaments/LotusIcon";
 import { ui } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
+import { isMusicPlaying, subscribeMusic, toggleWeddingMusic } from "@/lib/music";
 
-const PREF_KEY = "datla-wedding:music";
-const VOLUME = 0.45;
-const FADE_MS = 1200;
-// Only these count as user activation for autoplay; pointerdown does not on touch devices.
-const UNLOCK_EVENTS = ["click", "touchend", "keydown"] as const;
 const BARS = [
   { rest: 0.35, duration: "0.9s", delay: "-0.2s" },
   { rest: 0.6, duration: "0.7s", delay: "-0.5s" },
@@ -19,105 +15,16 @@ const BARS = [
 
 export function MusicToggle({ src }: { src: string }) {
   const { t } = useLanguage();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const fadeRef = useRef(0);
-  /** Whether the visitor wants music, independent of tab visibility. */
-  const wantRef = useRef(false);
-  /** Cleared once the toggle has been used, so the first-tap autoplay never overrides a choice. */
-  const armedRef = useRef(true);
   const [playing, setPlaying] = useState(false);
 
-  const getAudio = useCallback(() => {
-    if (!audioRef.current) {
-      const audio = new Audio(src);
-      audio.loop = true;
-      audio.preload = "auto";
-      audio.volume = 0;
-      audio.addEventListener("play", () => setPlaying(true));
-      audio.addEventListener("pause", () => setPlaying(false));
-      audioRef.current = audio;
-    }
-    return audioRef.current;
-  }, [src]);
-
-  const fadeTo = useCallback((audio: HTMLAudioElement, target: number, done?: () => void) => {
-    cancelAnimationFrame(fadeRef.current);
-    const from = audio.volume;
-    const start = performance.now();
-    const step = (now: number) => {
-      const k = Math.min(1, (now - start) / FADE_MS);
-      audio.volume = from + (target - from) * k;
-      if (k < 1) fadeRef.current = requestAnimationFrame(step);
-      else done?.();
-    };
-    fadeRef.current = requestAnimationFrame(step);
-  }, []);
-
-  const play = useCallback(() => {
-    const audio = getAudio();
-    wantRef.current = true;
-    audio
-      .play()
-      .then(() => fadeTo(audio, VOLUME))
-      .catch(() => {
-        wantRef.current = false;
-      });
-  }, [getAudio, fadeTo]);
-
-  const pause = useCallback(
-    (remember: boolean) => {
-      const audio = audioRef.current;
-      if (remember) wantRef.current = false;
-      if (audio && !audio.paused) fadeTo(audio, 0, () => audio.pause());
-    },
-    [fadeTo],
-  );
-
-  useEffect(() => {
-    if (window.localStorage.getItem(PREF_KEY) === "off") return;
-    const remove = () => UNLOCK_EVENTS.forEach((e) => window.removeEventListener(e, onFirstGesture, true));
-    function onFirstGesture(event: Event) {
-      if ((event.target as Element | null)?.closest?.("[data-music-toggle]")) return;
-      remove();
-      if (armedRef.current) play();
-    }
-    UNLOCK_EVENTS.forEach((e) => window.addEventListener(e, onFirstGesture, true));
-    return remove;
-  }, [play]);
-
-  useEffect(() => {
-    const onVisibility = () => {
-      if (document.hidden) pause(false);
-      else if (wantRef.current) play();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [play, pause]);
-
-  useEffect(
-    () => () => {
-      cancelAnimationFrame(fadeRef.current);
-      audioRef.current?.pause();
-    },
-    [],
-  );
-
-  const toggle = () => {
-    armedRef.current = false;
-    if (wantRef.current) {
-      pause(true);
-      window.localStorage.setItem(PREF_KEY, "off");
-    } else {
-      play();
-      window.localStorage.removeItem(PREF_KEY);
-    }
-  };
+  useEffect(() => subscribeMusic(setPlaying), []);
+  useEffect(() => setPlaying(isMusicPlaying()), [src]);
 
   return (
     <button
       type="button"
       data-music-toggle
-      onClick={toggle}
+      onClick={() => toggleWeddingMusic(src)}
       aria-pressed={playing}
       aria-label={t(playing ? ui.musicPause : ui.musicPlay)}
       title={t(playing ? ui.musicPause : ui.musicPlay)}

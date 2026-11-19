@@ -13,6 +13,7 @@ import { requestOrientationPermission, useParallaxInput } from "@/hooks/useParal
 import { refreshScrollTriggers } from "@/lib/gsap";
 import type { ImageAsset } from "@/lib/images";
 import { markInvitationOpened } from "@/lib/invitation";
+import { startWeddingMusic } from "@/lib/music";
 import { prefersLiteExperience, supportsWebGL } from "@/lib/webgl";
 import { HeroDoors } from "./HeroDoors";
 import { HeroStatic } from "./HeroStatic";
@@ -26,9 +27,10 @@ interface HeroClientProps {
   /** Optimised URL of `deity` for the WebGL texture. */
   deityTextureSrc: string | null;
   conchSrc: string | null;
+  musicSrc: string | null;
 }
 
-export function HeroClient({ deity, deityTextureSrc, conchSrc }: HeroClientProps) {
+export function HeroClient({ deity, deityTextureSrc, conchSrc, musicSrc }: HeroClientProps) {
   const { t } = useLanguage();
   const lenis = useLenis();
   const reducedMotion = usePrefersReducedMotion();
@@ -73,7 +75,8 @@ export function HeroClient({ deity, deityTextureSrc, conchSrc }: HeroClientProps
 
   const openInvitation = () => {
     if (phase !== "closed") return;
-    if (conchSrc) {
+    if (musicSrc) startWeddingMusic(musicSrc);
+    else if (conchSrc) {
       const audio = new Audio(conchSrc);
       audio.volume = 0.6;
       audio.play().catch(() => {});

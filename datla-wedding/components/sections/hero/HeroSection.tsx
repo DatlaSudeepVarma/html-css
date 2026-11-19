@@ -12,6 +12,7 @@ export async function HeroSection() {
         deity={deity}
         deityTextureSrc={deity ? optimizedImageUrl(deity.src, 1080) : null}
         conchSrc={findPublicAsset("shankha", AUDIO_EXTENSIONS)}
+        musicSrc={findPublicAsset("music", AUDIO_EXTENSIONS)}
       />
     </section>
   );
