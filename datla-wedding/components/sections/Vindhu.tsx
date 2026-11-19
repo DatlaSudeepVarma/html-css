@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { Diya } from "@/components/ornaments/Diya";
 import { GoldDivider } from "@/components/ornaments/GoldDivider";
 import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { wedding } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
 import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import type { ImageAsset } from "@/lib/images";
 
 const midrib = (x: number) => 136 - (x - 4) * 0.1224;
 
@@ -45,7 +47,7 @@ function BananaLeaf({ className = "" }: { className?: string }) {
   );
 }
 
-export function Vindhu() {
+export function Vindhu({ image }: { image: ImageAsset | null }) {
   const { t } = useLanguage();
   const root = useRef<HTMLElement>(null);
   const { vindhu } = wedding.events;
@@ -57,7 +59,7 @@ export function Vindhu() {
         gsap
           .timeline({ scrollTrigger: { trigger: root.current, start: "top 70%", end: "center 45%", scrub: 1 } })
           .from(".vi-title", { opacity: 0, y: 30 })
-          .from(".vl-leaf", { scaleX: 0, rotate: -6, transformOrigin: "0% 55%", ease: "power2.out", duration: 1.2 }, "<0.1")
+          .from(".vl-leaf", { opacity: 0, y: 24, scale: 0.92, ease: "power2.out", duration: 1 }, "<0.1")
           .from(".vf-item", { scale: 0, transformOrigin: "50% 50%", stagger: 0.08, ease: "back.out(2.5)", duration: 0.4 }, "-=0.4")
           .from(".vi-line", { opacity: 0, y: 20, stagger: 0.15 }, "-=0.2")
           .from(".vi-diya", { opacity: 0, y: 30, scale: 0.6, stagger: 0.1, ease: "back.out(2)" }, "<");
@@ -70,7 +72,20 @@ export function Vindhu() {
       <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-[calc(var(--frame-width)+1.25rem)] py-[calc(var(--frame-width)+3rem)] text-center">
         <SectionTitle title={vindhu.title} subtitle={wedding.vindhuNote} tone="light" className="vi-title" />
 
-        <BananaLeaf className="mt-6 w-[min(88vw,560px)] drop-shadow-[0_12px_18px_rgba(0,0,0,0.35)]" />
+        {image ? (
+          <Image
+            src={image.src}
+            alt=""
+            width={image.width}
+            height={image.height}
+            sizes="(max-width: 768px) 92vw, 640px"
+            placeholder="blur"
+            blurDataURL={image.blurDataURL}
+            className="vl-leaf mt-6 h-auto w-[min(92vw,560px)] rounded-2xl object-contain shadow-[0_12px_28px_rgba(0,0,0,0.4)] outline outline-1 outline-offset-4 outline-gold/55"
+          />
+        ) : (
+          <BananaLeaf className="vl-leaf mt-6 w-[min(88vw,560px)] drop-shadow-[0_12px_18px_rgba(0,0,0,0.35)]" />
+        )}
 
         <p className="vi-line font-decorative mt-6 text-[clamp(2.2rem,8vw,4rem)] font-bold leading-none text-[#F3DFA2] tabular-nums">{vindhu.numericDate}</p>
         <p className="vi-line font-heading mt-3 text-2xl text-parchment-light sm:text-3xl">{t(vindhu.dayLine)}</p>

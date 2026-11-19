@@ -5,8 +5,8 @@ import { AUDIO_EXTENSIONS, findPublicAsset } from "@/lib/assets";
 import { getImageAsset } from "@/lib/images";
 
 export default async function Home() {
-  const [garland, bride, groom, deity] = await Promise.all(
-    ["garland-exchange", "bride", "groom", "balaji-padmavathi"].map(getImageAsset),
+  const [garland, bride, groom, deity, vindhu, scratch, parents] = await Promise.all(
+    ["garland-exchange", "bride", "groom", "balaji-padmavathi", "vindhu", "scratch", "parents"].map(getImageAsset),
   );
   const music = findPublicAsset("music", AUDIO_EXTENSIONS);
 
@@ -14,7 +14,15 @@ export default async function Home() {
     <main className="relative">
       <IdleChrome music={music} />
       <HeroSection />
-      <InvitationBody garland={garland} bride={bride} groom={groom} deity={deity} />
+      <InvitationBody
+        garland={garland}
+        bride={bride}
+        groom={groom}
+        deity={deity}
+        vindhu={vindhu}
+        scratch={scratch}
+        parents={parents}
+      />
     </main>
   );
 }

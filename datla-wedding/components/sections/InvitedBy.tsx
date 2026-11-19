@@ -12,7 +12,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
 import type { ImageAsset } from "@/lib/images";
 
-export function InvitedBy({ deity }: { deity: ImageAsset | null }) {
+export function InvitedBy({ deity, parents }: { deity: ImageAsset | null; parents: ImageAsset | null }) {
   const { t } = useLanguage();
   const root = useRef<HTMLElement>(null);
   useScrollAnimation(
@@ -22,7 +22,8 @@ export function InvitedBy({ deity }: { deity: ImageAsset | null }) {
         gsap
           .timeline({ scrollTrigger: { trigger: root.current, start: "top 80%", end: "top 10%", scrub: 1 } })
           .from(".ib-title", { opacity: 0, y: 30 })
-          .from(".ib-names", { opacity: 0, y: 24 }, "<0.3");
+          .from(".ib-photo", { opacity: 0, y: 24, scale: 0.96 }, "<0.15")
+          .from(".ib-names", { opacity: 0, y: 24 }, "<0.2");
 
         gsap
           .timeline({ scrollTrigger: { trigger: ".ib-pin", start: "top top", end: "+=130%", pin: true, scrub: 1 } })
@@ -50,15 +51,30 @@ export function InvitedBy({ deity }: { deity: ImageAsset | null }) {
         </div>
 
         <SectionTitle title={wedding.invitedBy.label} tone="light" className="ib-title relative" />
-        <div className="ib-glow relative mt-5">
-          <p className="ib-names font-heading text-shimmer-gold-light mx-auto max-w-2xl text-[clamp(1.5rem,4.5vw,2.6rem)] leading-[1.6]">
+
+        {parents ? (
+          <div className="ib-photo relative mt-5 aspect-square w-[min(68vw,280px)] overflow-hidden rounded-2xl border-4 border-gold shadow-[0_12px_28px_rgba(0,0,0,0.4)] outline outline-1 outline-offset-4 outline-gold/55">
+            <Image
+              src={parents.src}
+              alt={t(wedding.invitedBy.names)}
+              fill
+              sizes="(max-width: 768px) 68vw, 280px"
+              placeholder="blur"
+              blurDataURL={parents.blurDataURL}
+              className="object-cover object-[center_22%]"
+            />
+          </div>
+        ) : null}
+
+        <div className="ib-glow relative mt-4">
+          <p className="ib-names font-heading text-shimmer-gold-light mx-auto max-w-2xl py-[0.2em] text-[clamp(1.15rem,3.6vw,1.85rem)] leading-[1.65]">
             {t(wedding.invitedBy.names)}
           </p>
         </div>
-        <GoldDivider className="relative mx-auto my-5 max-w-xs" />
+        <GoldDivider className="relative mx-auto my-4 max-w-xs" />
         <p className="ib-bless font-body relative mx-auto max-w-xl text-base text-parchment-light/90 sm:text-lg">{t(wedding.invitedBy.closingBlessing)}</p>
 
-        <div className="ib-deity relative mt-6 aspect-[1.6/2.48] h-[30svh] overflow-hidden rounded-t-full border-4 border-gold shadow-[0_0_40px_rgba(244,215,140,0.35)] sm:h-[34svh]">
+        <div className="ib-deity relative mt-5 aspect-[1.6/2.48] h-[22svh] overflow-hidden rounded-t-full border-4 border-gold shadow-[0_0_40px_rgba(244,215,140,0.35)] sm:h-[28svh]">
           {deity ? (
             <Image
               src={deity.src}

@@ -37,20 +37,24 @@ export function KalyanaVedika() {
       <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-[calc(var(--frame-width)+1.25rem)] py-[calc(var(--frame-width)+3rem)]">
         <SectionTitle title={venue.label} tone="light" className="ve-title" />
 
-        <div className="mt-8 grid w-full max-w-5xl items-center gap-8 md:grid-cols-[1fr_1.25fr] md:gap-12">
-          <div className="text-center md:text-left">
-            <h3 className="ve-line font-heading text-shimmer-gold-light text-[clamp(2rem,6vw,3.25rem)] leading-[1.5]">{t(venue.name)}</h3>
-            <GoldDivider flourish={false} className="ve-line mx-auto my-4 max-w-[14rem] md:mx-0" />
-            {venue.addressLines.map((line, i) => (
-              <p key={i} className="ve-line font-body text-lg text-parchment-light/90">
-                {t(line)}
-              </p>
-            ))}
+        <div className="mt-8 grid w-full max-w-5xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-12">
+          <div className="flex min-w-0 w-full flex-col items-center text-center lg:items-start lg:text-left">
+            <h3 className="ve-line font-heading text-shimmer-gold-light inline-block w-full max-w-full py-[0.28em] text-[clamp(1.55rem,5.2vw,2.6rem)] leading-[1.7]">
+              {t(venue.name)}
+            </h3>
+            <GoldDivider flourish={false} className="ve-line my-3 w-full max-w-[16rem]" />
+            <div className="ve-line space-y-1.5">
+              {venue.addressLines.map((line, i) => (
+                <p key={i} className="font-body text-base leading-[1.75] text-parchment-light/90 sm:text-lg">
+                  {t(line)}
+                </p>
+              ))}
+            </div>
             <a
               href={venue.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="ve-line font-heading mt-7 inline-flex items-center gap-2 rounded-full border-2 border-[#F3DFA2] bg-gradient-to-b from-[#F6E3A8] via-gold to-gold-dark px-7 py-3 text-lg text-maroon-dark shadow-glow transition-transform hover:scale-105 active:scale-95"
+              className="ve-line font-heading mt-7 inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-[#F3DFA2] bg-gradient-to-b from-[#F6E3A8] via-gold to-gold-dark px-7 py-3 text-lg text-maroon-dark shadow-glow transition-transform hover:scale-105 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
                 <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" fill="currentColor" />

@@ -19,17 +19,17 @@ function CoupleCard({ person, photo, label, side }: { person: Person; photo: Ima
       className={`couple-${side} relative w-[min(86vw,340px)] rounded-[2rem] border border-gold/60 bg-parchment-light/85 px-6 pb-5 pt-5 text-center shadow-card backdrop-blur-sm sm:px-8 sm:pb-7 sm:pt-6`}
     >
       <p className="font-body text-xs uppercase tracking-[0.3em] text-gold-dark">{label}</p>
-      <div className="relative mx-auto mt-3 h-24 w-24 rounded-full [@media(max-height:700px)]:h-16 [@media(max-height:700px)]:w-16 bg-gold-sheen p-[5px] shadow-glow sm:h-36 sm:w-36">
+      <div className="relative mx-auto mt-3 h-32 w-32 rounded-full bg-gold-sheen p-[5px] shadow-glow sm:h-40 sm:w-40">
         <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-parchment-light">
           {photo ? (
             <Image
               src={photo.src}
               fill
-              sizes="144px"
+              sizes="160px"
               placeholder="blur"
               blurDataURL={photo.blurDataURL}
               alt={t(person.name)}
-              className="object-cover"
+              className={`object-cover ${side === "bride" ? "object-[50%_16%]" : "object-[50%_12%]"}`}
             />
           ) : (
             <PortraitPlaceholder className="h-full w-full" />
@@ -38,7 +38,7 @@ function CoupleCard({ person, photo, label, side }: { person: Person; photo: Ima
       </div>
       <div className="couple-names mt-3 sm:mt-4">
         <p className="font-body text-sm text-maroon/80">{t(person.honorific)}</p>
-        <h3 className="font-heading text-shimmer-gold text-3xl leading-[1.5] sm:text-4xl">{t(person.name)}</h3>
+        <h3 className="font-heading text-shimmer-gold inline-block py-[0.3em] text-3xl leading-[1.7] sm:text-4xl sm:leading-[1.7]">{t(person.name)}</h3>
       </div>
       <p className="font-body mt-2 text-sm leading-relaxed text-brown/85">{parentsLine}</p>
     </article>
