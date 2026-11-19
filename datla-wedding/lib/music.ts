@@ -40,7 +40,9 @@ export function toggleWeddingMusic(src: string): boolean {
 
 export function subscribeMusic(listener: (playing: boolean) => void) {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 export function isMusicPlaying() {
