@@ -100,6 +100,8 @@ export function HeroStatic({ deity, className = "" }: HeroStaticProps) {
               placeholder="blur"
               blurDataURL={deity.blurDataURL}
               sizes="(max-width: 768px) 32vw, 240px"
+              quality={65}
+              priority
               alt=""
               className="h-full w-full object-cover object-[50%_25%]"
             />

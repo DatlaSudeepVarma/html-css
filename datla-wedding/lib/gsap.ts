@@ -6,6 +6,39 @@ import { useInvitationOpened } from "./invitation";
 /** Wrap scroll animations in `gsap.matchMedia().add(MOTION_OK, ...)`; content must be fully visible without them. */
 export const MOTION_OK = "(prefers-reduced-motion: no-preference)";
 
+/** Phones and touch screens. Same scenes as desktop; the scrub sits closer to the finger. */
+export const LITE_QUERY = "(max-width: 767px), (pointer: coarse)";
+
+export function isLiteMotion() {
+  return typeof window !== "undefined" && window.matchMedia(LITE_QUERY).matches;
+}
+
+/**
+ * Scroll-scrubbed reveal. On a phone the timeline tracks the finger more tightly so the scene
+ * feels weighted instead of floating behind the touch.
+ */
+export function scrollReveal(
+  trigger: Element | string | null,
+  rich: { start?: string; end?: string; scrub?: number | boolean; pin?: boolean; invalidateOnRefresh?: boolean },
+) {
+  if (!isLiteMotion()) return { trigger, ...rich };
+  return { trigger, ...rich, scrub: 0.45 };
+}
+
+/** Pinned scene. Transform pinning keeps the frame glued to the finger, including under the mobile URL bar. */
+export function pinScroll(end: string, liteEnd?: string) {
+  const lite = isLiteMotion();
+  return {
+    start: "top top",
+    end: lite ? (liteEnd ?? end.replace(/(\d+)/, (n) => String(Math.round(Number(n) * 0.85)))) : end,
+    pin: true,
+    pinType: "transform" as const,
+    anticipatePin: 1,
+    scrub: lite ? 0.45 : 1,
+    invalidateOnRefresh: true,
+  };
+}
+
 export interface Gsap {
   gsap: typeof import("gsap").gsap;
   ScrollTrigger: typeof import("gsap/ScrollTrigger").ScrollTrigger;
@@ -21,6 +54,8 @@ let loaded: Gsap | null = null;
 export function loadGsap(): Promise<Gsap> {
   loading ??= Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
     gsap.registerPlugin(ScrollTrigger);
+    // The mobile URL bar resizing the viewport would otherwise refresh every pin and remeasure mid-scroll.
+    ScrollTrigger.config({ ignoreMobileResize: true });
     loaded = { gsap, ScrollTrigger };
     return loaded;
   });

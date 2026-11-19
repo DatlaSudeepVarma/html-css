@@ -261,6 +261,14 @@
   }
 }
 
+/* Texture and vignette sit on their own layer above the colour fill, so the colour drifting while you scroll
+   never forces the noise to repaint. */
+.scroll-bg-overlay {
+  background-image:
+    var(--paper-noise),
+    radial-gradient(ellipse at center, transparent 55%, rgba(36, 21, 11, 0.28) 100%);
+}
+
 /* Lenis */
 html.lenis,
 html.lenis body {
@@ -322,5 +330,31 @@ html.lenis body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fixed-attachment backgrounds repaint the whole page on touch scroll. The texture stays; it just scrolls. */
+@media (max-width: 767px), (pointer: coarse) {
+  html {
+    background-attachment: scroll;
+  }
+
+  /* Looping shimmer and twinkle re-rasterize every frame. Hold them while the page is moving; they resume
+     where they stopped, so the gold keeps its glow without costing scroll frames. */
+  html.is-scrolling .text-shimmer-gold,
+  html.is-scrolling .text-shimmer-gold-light,
+  html.is-scrolling .sparkle-field *,
+  html.is-scrolling .motion-safe\:animate-twinkle {
+    animation-play-state: paused !important;
+  }
+
+  .sweep-petal,
+  .couple-bride,
+  .couple-groom,
+  .std-date,
+  .std-img,
+  .ib-deity,
+  .cd-card {
+    will-change: transform, opacity;
   }
 }

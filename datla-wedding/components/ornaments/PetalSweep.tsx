@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, isLiteMotion, useScrollAnimation } from "@/lib/gsap";
 import { useInvitationOpened } from "@/lib/invitation";
 
 const COLORS = [
@@ -41,7 +41,7 @@ export function PetalSweep({ count = 18, seed = 3 }: { count?: number; seed?: nu
       gsap.matchMedia().add(MOTION_OK, () => {
         // One trigger per sweep; per-petal eases keep the stagger without per-petal scroll measurements.
         const tl = gsap.timeline({
-          scrollTrigger: { trigger: ref.current, start: "top bottom", end: "top top", scrub: 0.8 },
+          scrollTrigger: { trigger: ref.current, start: "top bottom", end: "top top", scrub: isLiteMotion() ? 0.45 : 0.8 },
         });
         gsap.utils.toArray<HTMLElement>(".sweep-petal").forEach((el, i) => {
           const p = petals[i];
@@ -75,7 +75,7 @@ export function PetalSweep({ count = 18, seed = 3 }: { count?: number; seed?: nu
             <svg
               key={i}
               viewBox="-12 -44 24 46"
-              className="sweep-petal absolute left-0 drop-shadow-sm"
+              className="sweep-petal absolute left-0 md:drop-shadow-sm"
               style={{ top: `${p.top}%`, width: p.size, height: p.size * 1.9, transform: `translateX(${p.from}vw)` }}
             >
               <path d="M0 0 C-11 -12 -10 -30 0 -42 C10 -30 11 -12 0 0Z" fill={`url(#sp-${seed}-${i % COLORS.length})`} stroke="#B86A78" strokeWidth=".6" />

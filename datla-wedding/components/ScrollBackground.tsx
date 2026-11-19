@@ -31,13 +31,14 @@ export function ScrollBackground() {
 
       const update = () => {
         const vh = window.innerHeight;
-        const mid = vh * 0.55;
+        const y = window.scrollY + vh * 0.55;
         let color = BASE;
         for (let i = 0; i < sections.length; i++) {
-          const top = sections[i].getBoundingClientRect().top;
-          if (top > mid) break;
+          // Read live: pinned scenes shift later sections, so cached offsets would drift.
+          const top = sections[i].getBoundingClientRect().top + window.scrollY;
+          if (top > y) break;
           const from = i === 0 ? BASE : sections[i - 1].dataset.bg!;
-          const t = gsap.utils.clamp(0, 1, (mid - top) / (vh * 0.6));
+          const t = gsap.utils.clamp(0, 1, (y - top) / (vh * 0.6));
           color = gsap.utils.interpolate(from, sections[i].dataset.bg!, t);
         }
         el.style.backgroundColor = color;
@@ -63,15 +64,9 @@ export function ScrollBackground() {
   }, [lang, opened]);
 
   return (
-    <div
-      ref={ref}
-      aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10"
-      style={{
-        backgroundColor: BASE,
-        backgroundImage:
-          "var(--paper-noise), radial-gradient(ellipse at center, transparent 55%, rgba(36, 21, 11, 0.28) 100%)",
-      }}
-    />
+    <>
+      <div ref={ref} aria-hidden className="pointer-events-none fixed inset-0 -z-10" style={{ backgroundColor: BASE }} />
+      <div aria-hidden className="scroll-bg-overlay pointer-events-none fixed inset-0 -z-10" />
+    </>
   );
 }

@@ -8,7 +8,7 @@ import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { ui, wedding } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 import { GUESTS_MAX, MESSAGE_MAX, NAME_MAX, validateRsvp, type RsvpErrors } from "@/lib/rsvp";
 
 type Status = "idle" | "submitting" | "done" | "failed";
@@ -53,7 +53,7 @@ export function Rsvp() {
     ({ gsap }) => {
       gsap.matchMedia().add(MOTION_OK, () => {
         gsap
-          .timeline({ scrollTrigger: { trigger: root.current, start: "top 75%", end: "top 15%", scrub: 1 } })
+          .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 75%", end: "top 15%", scrub: 1 }) })
           .from(".rs-item", { opacity: 0, y: 36, stagger: 0.15 });
       });
     },

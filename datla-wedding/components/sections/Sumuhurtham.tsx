@@ -8,7 +8,7 @@ import { wedding } from "@/data/wedding";
 import { useInView } from "@/hooks/useInView";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 import { useInvitationOpened } from "@/lib/invitation";
 import { prefersLiteExperience, supportsWebGL } from "@/lib/webgl";
 import { ClockFallback } from "./ClockFallback";
@@ -48,7 +48,7 @@ export function Sumuhurtham() {
 
       gsap.matchMedia().add(MOTION_OK, () => {
         gsap
-          .timeline({ scrollTrigger: { trigger: root.current, start: "top 75%", end: "center center", scrub: 1 } })
+          .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 75%", end: "center center", scrub: 1 }) })
           .from(".mu-title", { opacity: 0, y: 30 })
           .from(".mu-char", { opacity: 0, yPercent: 80, rotateX: -80, stagger: 0.06, ease: "back.out(2)" }, "<0.2")
           .from(".mu-line", { opacity: 0, y: 20, stagger: 0.2 }, "-=0.2")

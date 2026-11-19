@@ -6,7 +6,7 @@ import { getImageAsset } from "@/lib/images";
 
 export default async function Home() {
   const [garland, bride, groom, deity, vindhu, scratch, parents] = await Promise.all(
-    ["garland-exchange", "bride", "groom", "balaji-padmavathi", "vindhu", "scratch", "parents"].map(getImageAsset),
+    ["radhakrish", "bride", "groom", "balaji-padmavathi", "vindhu", "scratch", "parents"].map(getImageAsset),
   );
   const music = findPublicAsset("music", AUDIO_EXTENSIONS);
 
