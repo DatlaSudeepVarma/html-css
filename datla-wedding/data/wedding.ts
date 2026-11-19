@@ -78,7 +78,7 @@ export interface WeddingData {
   };
   vindhuNote: Localized;
   calendar: {
-    /** Prefixed to each event title, e.g. "Sri Satya ❤ Akshay Vijay — Muhurtham". */
+    /** Prefixed to each event title, e.g. "Sree Satya ❤ Akshay Vijay — Muhurtham". */
     eventPrefix: Localized;
     description: Localized;
   };
@@ -113,7 +113,7 @@ export const wedding: WeddingData = {
 
   bride: {
     honorific: { te: "చి||ల||సౌ||", en: "Chi. La. Sow." },
-    name: { te: "శ్రీసత్య", en: "Sri Satya" },
+    name: { te: "శ్రీసత్య", en: "Sree Satya" },
     parents: {
       te: "శ్రీ\u00A0దాట్ల శ్రీనివాసరాజు & శ్రీమతి\u00A0పద్మావతి",
       en: "Sri\u00A0Datla Srinivasa Raju & Smt.\u00A0Padmavathi",
@@ -210,7 +210,7 @@ export const wedding: WeddingData = {
     title: { te: "వధువు & వరుడు", en: "The Bride & Groom" },
     union: {
       te: "శ్రీసత్య ❤ అక్షయ్ విజయ్ ల పరిణయం",
-      en: "The wedding of Sri Satya ❤ Akshay Vijay",
+      en: "The wedding of Sree Satya ❤ Akshay Vijay",
     },
   },
 
@@ -226,7 +226,7 @@ export const wedding: WeddingData = {
   },
 
   calendar: {
-    eventPrefix: { te: "శ్రీసత్య ❤ అక్షయ్ విజయ్", en: "Sri Satya ❤ Akshay Vijay" },
+    eventPrefix: { te: "శ్రీసత్య ❤ అక్షయ్ విజయ్", en: "Sree Satya ❤ Akshay Vijay" },
     description: {
       te: "దాట్ల వారి పెండ్లి పిలుపు — మీ రాకయే మాకు ఆనందం.",
       en: "Datla Vari Pendli Pilupu — your presence is our joy.",
@@ -236,7 +236,7 @@ export const wedding: WeddingData = {
   share: {
     message: {
       te: "🙏 శ్రీసత్య ❤ అక్షయ్ విజయ్ ల పరిణయ మహోత్సవానికి మీకు ఇదే మా ఆత్మీయ ఆహ్వానం.\n\n📅 3-12-2026, గురువారం — సుముహూర్తం రాత్రి 9:06 గంటలకు\n🍃 విందు రాత్రి 7:00 గంటల నుండి\n📍 ఆహ్వాన్ కన్వెన్షన్, సింగనగర్, విజయవాడ\n\nపూర్తి ఆహ్వాన పత్రిక:",
-      en: "🙏 You are warmly invited to the wedding of Sri Satya ❤ Akshay Vijay.\n\n📅 Thursday, 3 Dec 2026 — Muhurtham at 9:06 PM\n🍃 Dinner from 7:00 PM\n📍 Ahvan Convention, Singh Nagar, Vijayawada\n\nView the invitation:",
+      en: "🙏 You are warmly invited to the wedding of Sree Satya ❤ Akshay Vijay.\n\n📅 Thursday, 3 Dec 2026 — Muhurtham at 9:06 PM\n🍃 Dinner from 7:00 PM\n📍 Ahvan Convention, Singh Nagar, Vijayawada\n\nView the invitation:",
     },
   },
 
