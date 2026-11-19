@@ -6,7 +6,7 @@ import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { ui, wedding } from "@/data/wedding";
 import { useInView } from "@/hooks/useInView";
 import { useLanguage } from "@/hooks/useLanguage";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 
 const TARGET = new Date(wedding.events.muhurtham.dateTime).getTime();
 const PLACEHOLDER = "--";
@@ -82,7 +82,7 @@ export function Countdown() {
     ({ gsap }) => {
       gsap.matchMedia().add(MOTION_OK, () => {
         gsap
-          .timeline({ scrollTrigger: { trigger: root.current, start: "top 75%", end: "center 55%", scrub: 1 } })
+          .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 75%", end: "center 55%", scrub: 1 }) })
           .from(".cd-title", { opacity: 0, y: 30 })
           .from(".cd-card", { opacity: 0, y: 60, rotateX: -70, transformPerspective: 600, stagger: 0.15 }, "<0.2")
           .from(".cd-arrived", { opacity: 0, scale: 0.8 }, "<");

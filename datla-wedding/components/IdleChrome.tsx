@@ -5,6 +5,7 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { LotusCursor } from "@/components/LotusCursor";
 import { MusicToggle } from "@/components/MusicToggle";
 import { ScrollBackground } from "@/components/ScrollBackground";
+import { useInvitationOpened } from "@/lib/invitation";
 
 /**
  * Chrome that isn't the LCP. Mounted after the first paint as its own task so it doesn't sit on the
@@ -12,6 +13,7 @@ import { ScrollBackground } from "@/components/ScrollBackground";
  */
 export function IdleChrome({ music }: { music: string | null }) {
   const [ready, setReady] = useState(false);
+  const opened = useInvitationOpened();
   useEffect(() => {
     const id = window.setTimeout(() => setReady(true), 0);
     return () => window.clearTimeout(id);
@@ -21,7 +23,8 @@ export function IdleChrome({ music }: { music: string | null }) {
     <>
       <ScrollBackground />
       <LanguageToggle className="fixed left-[calc(var(--frame-width)+1.25rem+var(--safe-left))] top-[calc(var(--frame-width)+1.25rem+var(--safe-top))] z-50" />
-      {music && <MusicToggle src={music} />}
+      {/* The song belongs to the Open Invitation tap. Until then there is no control that could start it. */}
+      {music && opened && <MusicToggle src={music} />}
       <LotusCursor />
     </>
   );

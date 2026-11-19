@@ -7,7 +7,7 @@ import { GoldDivider } from "@/components/ornaments/GoldDivider";
 import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { wedding } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 import type { ImageAsset } from "@/lib/images";
 
 const midrib = (x: number) => 136 - (x - 4) * 0.1224;
@@ -57,7 +57,7 @@ export function Vindhu({ image }: { image: ImageAsset | null }) {
     ({ gsap }) => {
       gsap.matchMedia().add(MOTION_OK, () => {
         gsap
-          .timeline({ scrollTrigger: { trigger: root.current, start: "top 70%", end: "center 45%", scrub: 1 } })
+          .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 70%", end: "center 45%", scrub: 1 }) })
           .from(".vi-title", { opacity: 0, y: 30 })
           .from(".vl-leaf", { opacity: 0, y: 24, scale: 0.92, ease: "power2.out", duration: 1 }, "<0.1")
           .from(".vf-item", { scale: 0, transformOrigin: "50% 50%", stagger: 0.08, ease: "back.out(2.5)", duration: 0.4 }, "-=0.4")
@@ -78,7 +78,8 @@ export function Vindhu({ image }: { image: ImageAsset | null }) {
             alt=""
             width={image.width}
             height={image.height}
-            sizes="(max-width: 768px) 92vw, 640px"
+            sizes="(max-width: 768px) 92vw, 560px"
+            quality={65}
             placeholder="blur"
             blurDataURL={image.blurDataURL}
             className="vl-leaf mt-6 h-auto w-[min(92vw,560px)] rounded-2xl object-contain shadow-[0_12px_28px_rgba(0,0,0,0.4)] outline outline-1 outline-offset-4 outline-gold/55"

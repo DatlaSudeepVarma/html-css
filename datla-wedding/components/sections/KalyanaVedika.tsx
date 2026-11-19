@@ -1,25 +1,42 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoldDivider } from "@/components/ornaments/GoldDivider";
 import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { ui, wedding } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 
 export function KalyanaVedika() {
   const { t } = useLanguage();
   const root = useRef<HTMLElement>(null);
   // The iframe would otherwise swallow wheel/touch scrolling.
   const [mapActive, setMapActive] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
   const { venue } = wedding;
+
+  // Touch has no mouseleave: release the map on a tap outside it, or once it scrolls away.
+  useEffect(() => {
+    if (!mapActive) return;
+    const map = mapRef.current;
+    const onPointerDown = (e: PointerEvent) => {
+      if (map && !map.contains(e.target as Node)) setMapActive(false);
+    };
+    const io = new IntersectionObserver(([entry]) => !entry.isIntersecting && setMapActive(false));
+    if (map) io.observe(map);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      io.disconnect();
+    };
+  }, [mapActive]);
 
   useScrollAnimation(
     root,
     ({ gsap }) => {
       gsap.matchMedia().add(MOTION_OK, () => {
         gsap
-          .timeline({ scrollTrigger: { trigger: root.current, start: "top 70%", end: "center 50%", scrub: 1 } })
+          .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 70%", end: "center 50%", scrub: 1 }) })
           .from(".ve-title", { opacity: 0, y: 30 })
           .from(".ve-line", { opacity: 0, x: -40, stagger: 0.12 }, "<0.2")
           .fromTo(
@@ -64,7 +81,8 @@ export function KalyanaVedika() {
           </div>
 
           <div
-            className="ve-map relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-4 border-gold shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
+            ref={mapRef}
+            className="ve-map relative aspect-[4/3] w-full overflow-hidden rounded-3xl border-4 border-gold bg-[#2a0c0c] shadow-[0_20px_50px_rgba(0,0,0,0.45)]"
             onMouseLeave={() => setMapActive(false)}
           >
             <iframe

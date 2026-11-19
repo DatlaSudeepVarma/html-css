@@ -8,7 +8,7 @@ import { SectionTitle } from "@/components/ornaments/SectionTitle";
 import { ui, wedding } from "@/data/wedding";
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { MOTION_OK, useScrollAnimation } from "@/lib/gsap";
+import { MOTION_OK, isLiteMotion, scrollReveal, useScrollAnimation } from "@/lib/gsap";
 import type { ImageAsset } from "@/lib/images";
 
 const CLEAR_RATIO = 0.46;
@@ -140,7 +140,7 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
       if (finished.current || started.current) return;
       const { width, height } = host.getBoundingClientRect();
       if (width < 8 || height < 8) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, isLiteMotion() ? 1.5 : 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -157,7 +157,9 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
 
     const onDown = (e: PointerEvent) => {
       if (finished.current || e.button !== 0) return;
-      e.preventDefault();
+      // Touch must stay untouched: the browser decides between a vertical page scroll (pointercancel) and a
+      // sideways scratch stroke (touch-pan-y on the canvas). Only a mouse needs its default drag suppressed.
+      if (e.pointerType === "mouse") e.preventDefault();
       drawing.current = true;
       started.current = true;
       setHintVisible(false);
@@ -172,7 +174,7 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
     };
     const onMove = (e: PointerEvent) => {
       if (!drawing.current || finished.current) return;
-      e.preventDefault();
+      if (e.pointerType === "mouse") e.preventDefault();
       const p = localPoint(e, canvas);
       scratchAt(ctx, p.x, p.y, radius(), last.current);
       last.current = p;
@@ -204,7 +206,7 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
   useScrollAnimation(root, ({ gsap }) => {
     gsap.matchMedia().add(MOTION_OK, () => {
       gsap
-        .timeline({ scrollTrigger: { trigger: root.current, start: "top 80%", end: "top 30%", scrub: 1 } })
+        .timeline({ scrollTrigger: scrollReveal(root.current, { start: "top 80%", end: "top 30%", scrub: 1 }) })
         .from(".sc-title", { opacity: 0, y: 24 })
         .from(".sc-card", { opacity: 0, y: 32, scale: 0.96, ease: "power2.out" }, "<0.1");
     });
@@ -220,7 +222,6 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
 
         <div
           ref={card}
-          data-lenis-prevent
           className="sc-card relative mt-8 w-[min(90vw,520px)] overflow-hidden rounded-[1.5rem] border-[5px] border-gold shadow-card outline outline-1 outline-offset-4 outline-gold/60"
           style={{ aspectRatio: aspect, maxHeight: "min(64svh, 580px)" }}
         >
@@ -230,6 +231,7 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
               alt=""
               fill
               sizes="(max-width: 768px) 90vw, 520px"
+              quality={65}
               placeholder="blur"
               blurDataURL={image.blurDataURL}
               className="object-cover object-[center_42%]"
@@ -242,7 +244,7 @@ export function ScratchReveal({ image }: { image: ImageAsset | null }) {
           {!reducedMotion && !revealed && (
             <canvas
               ref={canvasRef}
-              className="absolute inset-0 z-10 h-full w-full touch-none cursor-grab transition-opacity duration-500 active:cursor-grabbing"
+              className="absolute inset-0 z-10 h-full w-full touch-pan-y cursor-grab transition-opacity duration-500 active:cursor-grabbing"
               aria-label={t(wedding.scratch.hint)}
             />
           )}

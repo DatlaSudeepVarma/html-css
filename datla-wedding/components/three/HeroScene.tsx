@@ -91,7 +91,7 @@ function Scene({ phase, reducedMotion, parallax, deitySrc, isMobile }: HeroScene
           ))}
         </ParallaxLayer>
         <Sparkles
-          count={isMobile ? 14 : 50}
+          count={isMobile ? 28 : 50}
           scale={[4.4, 4.4, 1.5]}
           position={[0, 0.5, 0.4]}
           size={2.2}

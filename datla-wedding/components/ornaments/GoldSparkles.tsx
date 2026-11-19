@@ -37,7 +37,7 @@ export function GoldSparkles({ count = 30, seed = 7, className = "" }: GoldSpark
   });
 
   return (
-    <div aria-hidden className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
+    <div aria-hidden className={`sparkle-field pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
       {sparkles.map(({ star, style }, i) =>
         star ? (
           <svg

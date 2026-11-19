@@ -49,19 +49,28 @@ export function generateStaticParams() {
 // URLs aren't content-hashed, so allow edits to propagate within a day.
 const CACHE = "public, max-age=86400, stale-while-revalidate=604800";
 
+/** Dev re-runs this route on every request; effort 6 made the door WebPs take seconds to appear. */
+const rasterCache = new Map<string, Uint8Array>();
+
 export async function GET(_request: Request, { params }: { params: { name: string } }) {
   const [, base, ext] = params.name.match(/^(.+)\.(svg|webp)$/) ?? [];
   const render = ART[base];
   if (!render || (ext === "webp" && !RASTER[base])) return new Response("Not found", { status: 404 });
 
   if (ext === "webp") {
-    const sharp = (await import("sharp")).default;
-    const [width, height] = RASTER[base];
-    const webp = await sharp(Buffer.from(render()), { density: 144 })
-      .resize(width, height, { fit: "fill" })
-      .webp({ quality: 70, effort: 6 })
-      .toBuffer();
-    return new Response(new Uint8Array(webp), { headers: { "Content-Type": "image/webp", "Cache-Control": CACHE } });
+    let webp = rasterCache.get(base);
+    if (!webp) {
+      const sharp = (await import("sharp")).default;
+      const [width, height] = RASTER[base];
+      webp = new Uint8Array(
+        await sharp(Buffer.from(render()))
+          .resize(width, height, { fit: "fill" })
+          .webp({ quality: 68, effort: 2 })
+          .toBuffer(),
+      );
+      rasterCache.set(base, webp);
+    }
+    return new Response(webp.slice(), { headers: { "Content-Type": "image/webp", "Cache-Control": CACHE } });
   }
 
   return new Response(render(), {
