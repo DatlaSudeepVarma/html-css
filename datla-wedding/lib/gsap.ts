@@ -25,14 +25,18 @@ export function scrollReveal(
   return { trigger, ...rich, scrub: 0.45 };
 }
 
-/** Pinned scene. Transform pinning keeps the frame glued to the finger, including under the mobile URL bar. */
+/**
+ * Pinned scene. On touch the browser scrolls on the compositor thread, so a pin that is moved by JavaScript
+ * (pinType "transform") trails the page by a frame and shakes. `position: fixed` is held by the compositor
+ * itself and stays perfectly still; desktop keeps the transform pin that suits Lenis.
+ */
 export function pinScroll(end: string, liteEnd?: string) {
   const lite = isLiteMotion();
   return {
     start: "top top",
     end: lite ? (liteEnd ?? end.replace(/(\d+)/, (n) => String(Math.round(Number(n) * 0.85)))) : end,
     pin: true,
-    pinType: "transform" as const,
+    pinType: lite ? ("fixed" as const) : ("transform" as const),
     anticipatePin: 1,
     scrub: lite ? 0.45 : 1,
     invalidateOnRefresh: true,

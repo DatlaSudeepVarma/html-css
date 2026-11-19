@@ -344,13 +344,28 @@ html.lenis body {
   html.is-scrolling .text-shimmer-gold,
   html.is-scrolling .text-shimmer-gold-light,
   html.is-scrolling .sparkle-field *,
-  html.is-scrolling .motion-safe\:animate-twinkle {
+  html.is-scrolling .motion-safe\:animate-twinkle,
+  html.is-scrolling .motion-safe\:animate-heartbeat,
+  html.is-scrolling .motion-safe\:animate-glow {
     animation-play-state: paused !important;
   }
 
+  /* Backdrop blur re-samples whatever is behind it on every frame. On a phone that is the moving page (for
+     the fixed language / music pills) or a moving card, so it costs a full-screen blur per frame. The
+     surfaces are already mostly opaque, so the look barely changes. */
+  .backdrop-blur,
+  .backdrop-blur-sm,
+  .backdrop-blur-\[2px\] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Promote what the scenes animate to their own layers so each frame only moves a texture. */
   .sweep-petal,
   .couple-bride,
   .couple-groom,
+  .couple-union,
+  .couple-halo,
   .std-date,
   .std-img,
   .ib-deity,
