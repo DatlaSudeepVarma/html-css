@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --parchment: #e8dfc8;
+  --parchment-light: #f3ecdb;
+  --parchment-dark: #d9ccae;
+  --maroon: #6b1e1e;
+  --maroon-dark: #4a1212;
+  --gold: #b8893b;
+  --gold-light: #d4af6a;
+  --brown: #3b2314;
+  --brown-light: #5a3a24;
+  --lotus: #e8a3a7;
+  --saffron: #e07b2a;
+
+  --frame-width: clamp(12px, 2.4vw, 26px);
+
+  /* Non-zero only with viewport-fit=cover on notched phones (mostly landscape and the home indicator). */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  --lh-text: 1.5;
+  --lh-display: 1.25;
+
+  /* Stand-ins until the deferred web fonts are defined (lib/fonts.ts); an unset var() would invalidate the
+     whole font-family list it appears in. */
+  --font-noto-serif-telugu: serif;
+  --font-playfair: serif;
+  --font-cinzel-decorative: serif;
+  --font-script: cursive;
+
+  --pattern-border: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Crect width='26' height='26' fill='%233B2314'/%3E%3Cpath d='M13 2 24 13 13 24 2 13Z' fill='none' stroke='%23B8893B' stroke-width='1.2'/%3E%3Cpath d='M13 7 19 13 13 19 7 13Z' fill='%235A3A24' stroke='%23D4AF6A' stroke-width='.6'/%3E%3Ccircle cx='13' cy='13' r='1.8' fill='%23D4AF6A'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%23B8893B'/%3E%3Ccircle cx='26' cy='0' r='2' fill='%23B8893B'/%3E%3Ccircle cx='0' cy='26' r='2' fill='%23B8893B'/%3E%3Ccircle cx='26' cy='26' r='2' fill='%23B8893B'/%3E%3C/svg%3E");
+  --paper-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .23 0 0 0 0 .14 0 0 0 0 .08 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  html {
+    /* The hero locks scrolling; keeping the gutter stops layout (and pin widths) shifting when it unlocks. */
+    scrollbar-gutter: stable;
+    background-color: var(--parchment);
+    background-image:
+      var(--paper-noise),
+      radial-gradient(ellipse at center, rgba(243, 236, 219, 0.9) 0%, rgba(232, 223, 200, 0) 60%),
+      radial-gradient(ellipse at center, transparent 55%, rgba(140, 100, 36, 0.22) 100%);
+    background-attachment: fixed;
+    color: var(--brown);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Transparent so the fixed <ScrollBackground /> (z-index -10) shows through. */
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-left: var(--safe-left);
+    padding-right: var(--safe-right);
+    overflow-x: clip;
+    font-family: var(--font-noto-serif-telugu), var(--font-playfair), serif;
+    -webkit-font-smoothing: antialiased;
+    /* Telugu has no inter-word hyphenation and its conjuncts must never be split mid-aksharam:
+       wrap only at spaces, and fall back to breaking a long word only if it would overflow. */
+    overflow-wrap: break-word;
+    word-break: normal;
+    line-break: auto;
+    hyphens: manual;
+  }
+
+  html:lang(en) body {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Telugu vowel signs and vattulu stack above and below the line, so text-* sizes need taller lines (see tailwind fontSize). */
+  html:lang(te) {
+    --lh-text: 1.8;
+    --lh-display: 1.6;
+  }
+
+  ::selection {
+    background: var(--maroon);
+    color: var(--parchment-light);
+  }
+}
+
+@layer components {
+  /* Headings swap font family with the active language. */
+  .font-heading {
+    font-family: var(--font-ramabhadra), var(--font-noto-serif-telugu), serif;
+    letter-spacing: 0.01em;
+  }
+  html:lang(en) .font-heading {
+    font-family: var(--font-cinzel-decorative), var(--font-playfair), serif;
+    letter-spacing: 0.04em;
+  }
+
+  .font-body {
+    font-family: var(--font-noto-serif-telugu), serif;
+    line-height: 1.9;
+  }
+  html:lang(en) .font-body {
+    font-family: var(--font-playfair), Georgia, serif;
+    line-height: 1.7;
+  }
+
+  .text-gold-sheen {
+    background-image: linear-gradient(
+      100deg,
+      #8c6424 0%,
+      #d4af6a 30%,
+      #f3dfa2 50%,
+      #d4af6a 70%,
+      #8c6424 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Classic card frame: patterned brown band with an inner double gold rule. */
+  .ornate-frame {
+    position: relative;
+    padding: calc(var(--frame-width) + 1.5rem);
+    background-color: var(--parchment);
+    background-image: var(--paper-noise);
+  }
+  .ornate-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: var(--frame-width);
+    background: var(--pattern-border);
+    background-size: var(--frame-width) var(--frame-width);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+  .ornate-frame::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--frame-width) + 6px);
+    border: 3px double var(--gold);
+    outline: 1px solid rgba(107, 30, 30, 0.35);
+    outline-offset: 4px;
+    pointer-events: none;
+  }
+
+  /* Patterned band only (no interior), used by <OrnateBorder />. */
+  .ornate-band {
+    padding: var(--frame-width);
+    background: var(--pattern-border);
+    background-size: var(--frame-width) var(--frame-width);
+    box-shadow: inset 0 0 0 1px rgba(184, 137, 59, 0.6);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+
+  /* Darker base than .text-gold-sheen so it stays legible on parchment. */
+  .text-shimmer-gold {
+    background-image: linear-gradient(
+      100deg,
+      #6b4a17 0%,
+      #9c7128 30%,
+      #b8893b 42%,
+      #f6e3a8 50%,
+      #b8893b 58%,
+      #9c7128 70%,
+      #6b4a17 100%
+    );
+    background-size: 250% auto;
+    background-position: 100% center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 1px 0 rgba(59, 35, 20, 0.25));
+  }
+  /* For dark (maroon) backgrounds. */
+  .text-shimmer-gold-light {
+    background-image: linear-gradient(
+      100deg,
+      #b8893b 0%,
+      #e9c77b 30%,
+      #f3dfa2 42%,
+      #fffaf0 50%,
+      #f3dfa2 58%,
+      #e9c77b 70%,
+      #b8893b 100%
+    );
+    background-size: 250% auto;
+    background-position: 100% center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .text-shimmer-gold,
+    .text-shimmer-gold-light {
+      animation: shimmer-sweep 5s ease-in-out infinite;
+    }
+  }
+  @keyframes shimmer-sweep {
+    0% {
+      background-position: 100% center;
+    }
+    60%,
+    100% {
+      background-position: 0% center;
+    }
+  }
+
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* Everything below the hero is not rendered (no layout, paint or font downloads) until the doors open; the page
+     is scroll-locked until then. `auto` isn't enough: the wrapper starts right below the fold, inside the
+     browser's render margin. Afterwards it lays out normally so ScrollTrigger measures real positions. */
+  html:not(.invitation-opened) .deferred-sections {
+    content-visibility: hidden;
+    contain-intrinsic-size: auto 700svh;
+  }
+
+  /* The 2D hero lays out in the same units as the 3D camera: 7 world units tall, 5.7 wide at the lowest. */
+  .hero-stage {
+    container-type: size;
+  }
+  .hero-units {
+    --u: min(100svh / 7, 100vw / 5.7);
+  }
+  @supports (width: 1cqh) {
+    .hero-units {
+      --u: min(100cqh / 7, 100cqw / 5.7);
+    }
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Used inline by <PetalConfetti />, so Tailwind can't generate it. */
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin));
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
